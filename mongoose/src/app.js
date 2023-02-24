@@ -13,7 +13,20 @@ mongoose
 const playlistSchema = new mongoose.Schema({
   name: String,
   course: String,
-  videos: Number,
+  videos: {
+    type: Number,
+    // validate(value) {
+    //   if (value < 0) {
+    //     throw new Error("Not to insert negative");
+    //   }
+    // },
+    validate: {
+      validator: function (value) {
+        return value.legth < 0;
+      },
+      message: "Not to insert negative",
+    },
+  },
   author: String,
 });
 const Playlist = new mongoose.model("Playlist", playlistSchema);
@@ -44,7 +57,7 @@ const Document = async () => {
     const pythonPlaylist = new Playlist({
       name: "django",
       course: "backend",
-      videos: 125,
+      videos: -5,
       author: "The coding studio",
       active: true,
     });
@@ -63,3 +76,14 @@ const Document = async () => {
 };
 
 Document();
+
+// const getDocument = async () => {
+//   try {
+//     const res = await Playlist.find().sort({ videos: 1 });
+//     console.log("get data", res);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// getDocument();
